@@ -27,7 +27,13 @@ export const auth = getAuth(app);
 
 // Setup Google popup for sign up
 const provider = new GoogleAuthProvider();
-provider.setCustomParameters({prompt: 'select_account'});
+provider.setCustomParameters({ prompt: "select_account" });
 
 // Sign In with Google
-export const signInWithGoogle = () => signInWithPopup(auth, provider);
+export const signInWithGoogle = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (err) {
+    console.log(err, "An error occurred.");
+  }
+};
