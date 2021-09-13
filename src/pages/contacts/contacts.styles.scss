@@ -1,0 +1,13 @@
+.contacts {
+  font-size: 20px;
+  padding: 10px 45px;
+  display: flex;
+  flex-direction: column;
+
+  .contact-details {
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
