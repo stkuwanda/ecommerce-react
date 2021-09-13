@@ -3,7 +3,20 @@ import { initializeApp } from "firebase/app";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  collectionGroup,
+  doc,
+  addDoc,
+  deleteDoc,
+  deleteField,
+  getDoc,
+  getDocs,
+  documentId,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -35,5 +48,30 @@ export const signInWithGoogle = async () => {
     await signInWithPopup(auth, provider);
   } catch (err) {
     console.log(err, "An error occurred.");
+  }
+};
+
+// Create A User Profile Document
+export const createUserProfileDocument = async (userAuth, otherData) => {
+  if (!userAuth) return;
+  try {
+    const docRef = doc(firestore, `/users/${userAuth.uid}`);
+    const snapShotRef = await getDoc(docRef);
+    console.log("DocRef result:", docRef);
+    console.log("Snapshot result", snapShotRef);
+
+    if (!snapShotRef.exists()) {
+      const { displayName, email } = userAuth;
+      const createdAt = new Date();
+      try {
+        await setDoc(docRef, { displayName, email, createdAt, ...otherData });
+      } catch (err) {
+        console.log("Failed to create user", err.message);
+      }
+    }
+
+    return docRef;
+  } catch (err) {
+    console.log(err);
   }
 };
