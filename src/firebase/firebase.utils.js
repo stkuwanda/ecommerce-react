@@ -16,6 +16,7 @@ import {
   documentId,
   updateDoc,
   setDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
@@ -75,3 +76,6 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
     console.log(err);
   }
 };
+
+// Export onSnapShot To Receive Latest Data of a DocumentRef
+export { onSnapshot };
