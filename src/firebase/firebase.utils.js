@@ -18,7 +18,12 @@ import {
   setDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -54,6 +59,7 @@ export const signInWithGoogle = async () => {
 
 // Create A User Profile Document
 export const createUserProfileDocument = async (userAuth, otherData) => {
+  console.log('createUserProfileDocument running...');
   if (!userAuth) return;
   try {
     const docRef = doc(firestore, `/users/${userAuth.uid}`);
@@ -62,12 +68,24 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
     console.log("Snapshot result", snapShotRef);
 
     if (!snapShotRef.exists()) {
-      const { displayName, email } = userAuth;
+      let { displayName, email } = userAuth;
       const createdAt = new Date();
       try {
+        console.log(
+          "line 68, firebase.utils.js, createUserProfileDocument(), displayName",
+          displayName
+        );
+        console.log(
+          "line 69, firebase.utils.js, createUserProfileDocument(), otherData",
+          otherData
+        );
+
         await setDoc(docRef, { displayName, email, createdAt, ...otherData });
       } catch (err) {
-        console.log("Failed to create user", err.message);
+        console.log(
+          "line 70, firebase.utils.js, createUserProfileDocument(), Error saving new user to firebase",
+          err.message
+        );
       }
     }
 
@@ -78,4 +96,4 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
 };
 
 // Export onSnapShot To Receive Latest Data of a DocumentRef
-export { onSnapshot };
+export { onSnapshot, createUserWithEmailAndPassword };
