@@ -1,5 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router";
+import { connect } from "react-redux";
+import { setCurrentUser } from "./redux/user/user.actions";
 import HomePage from "./pages/homepage/homepage.component";
 import "./App.css";
 import ShopPage from "./pages/shop/shop.component";
@@ -13,8 +15,8 @@ import {
 import ContactsPage from "./pages/contacts/contacts.component";
 
 class App extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       currentUser: null,
     };
@@ -24,18 +26,22 @@ class App extends React.Component {
   unsubscribeFromDocRef = null;
 
   componentDidMount() {
+    const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const docRef = await createUserProfileDocument(user);
         this.unsubscribeFromDocRef = onSnapshot(docRef, {
           next: (snapshot) => {
-            this.setState({
-              currentUser: { id: snapshot.id, ...snapshot.data() },
-            }, () => console.log('line 34, App.js, componentDidMount(), Current User state', this.state.currentUser));
+            let user = { id: snapshot.id, ...snapshot.data() };
+            setCurrentUser(user);
+            console.log(
+              "line 36, App.js, componentDidMount(), Current User state:",
+              user
+            );
           },
         });
       }
-      this.setState({ currentUser: null });
+      setCurrentUser(null);
     });
   }
 
@@ -60,4 +66,8 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+});
+
+export default connect(null, mapDispatchToProps)(App);

@@ -5,16 +5,8 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 import {
   getFirestore,
-  collection,
-  collectionGroup,
   doc,
-  addDoc,
-  deleteDoc,
-  deleteField,
   getDoc,
-  getDocs,
-  documentId,
-  updateDoc,
   setDoc,
   onSnapshot,
 } from "firebase/firestore";
@@ -23,7 +15,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -60,7 +52,7 @@ export const signInWithGoogle = async () => {
 
 // Create A User Profile Document
 export const createUserProfileDocument = async (userAuth, otherData) => {
-  console.log('createUserProfileDocument running...');
+  console.log("createUserProfileDocument running...");
   if (!userAuth) return;
   try {
     const docRef = doc(firestore, `/users/${userAuth.uid}`);
@@ -97,4 +89,8 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
 };
 
 // Export onSnapShot To Receive Latest Data of a DocumentRef
-export { onSnapshot, createUserWithEmailAndPassword, signInWithEmailAndPassword };
+export {
+  onSnapshot,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+};
