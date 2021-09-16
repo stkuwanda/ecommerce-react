@@ -7,7 +7,7 @@ import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 import { auth } from "../../firebase/firebase.utils";
 
-const Header = ({ currentUser }) => (
+const Header = ({ currentUser, isCartDropDownHidden }) => (
   <div className='header'>
     <Link className='logo-container' to='/'>
       <Logo className='logo' />
@@ -31,10 +31,10 @@ const Header = ({ currentUser }) => (
       )}
       <CartIcon />
     </div>
-    <CartDropdown />
+    {isCartDropDownHidden ? null : <CartDropdown />}
   </div>
 );
 
-const mapStateToProps = state => ({currentUser: state.user.currentUser});
+const mapStateToProps = state => ({currentUser: state.user.currentUser, isCartDropDownHidden: state.cart.hidden});
 
 export default connect(mapStateToProps)(Header);
