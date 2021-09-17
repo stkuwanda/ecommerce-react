@@ -13,6 +13,7 @@ import {
   onSnapshot,
 } from "./firebase/firebase.utils";
 import ContactsPage from "./pages/contacts/contacts.component";
+import { selectCurrentUser } from "./redux/user/user.selectors";
 
 class App extends React.Component {
   constructor(props) {
@@ -75,7 +76,7 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user }) => ({ currentUser: user.currentUser });
+const mapStateToProps = (state) => ({ currentUser: selectCurrentUser(state) });
 
 const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),

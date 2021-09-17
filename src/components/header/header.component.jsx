@@ -6,6 +6,8 @@ import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 import { auth } from "../../firebase/firebase.utils";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { selectCartDropDownHidden } from "../../redux/cart/cart.selectors";
 
 const Header = ({ currentUser, isCartDropDownHidden }) => (
   <div className='header'>
@@ -20,14 +22,13 @@ const Header = ({ currentUser, isCartDropDownHidden }) => (
         CONTACTS
       </Link>
       {currentUser ? (
-        <div
-          className='option'
-          onClick={() => auth.signOut()}
-        >
+        <div className='option' onClick={() => auth.signOut()}>
           SIGN OUT
         </div>
       ) : (
-        <Link className='option' to='/signin'>SIGN IN</Link>
+        <Link className='option' to='/signin'>
+          SIGN IN
+        </Link>
       )}
       <CartIcon />
     </div>
@@ -35,6 +36,9 @@ const Header = ({ currentUser, isCartDropDownHidden }) => (
   </div>
 );
 
-const mapStateToProps = state => ({currentUser: state.user.currentUser, isCartDropDownHidden: state.cart.hidden});
+const mapStateToProps = (state) => ({
+  currentUser: selectCurrentUser(state),
+  isCartDropDownHidden: selectCartDropDownHidden(state),
+});
 
 export default connect(mapStateToProps)(Header);
