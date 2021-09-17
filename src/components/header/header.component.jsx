@@ -1,4 +1,5 @@
 import React from "react";
+import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import "./header.styles.scss";
@@ -36,9 +37,9 @@ const Header = ({ currentUser, isCartDropDownHidden }) => (
   </div>
 );
 
-const mapStateToProps = (state) => ({
-  currentUser: selectCurrentUser(state),
-  isCartDropDownHidden: selectCartDropDownHidden(state),
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+  isCartDropDownHidden: selectCartDropDownHidden,
 });
 
 export default connect(mapStateToProps)(Header);
