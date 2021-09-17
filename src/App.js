@@ -14,6 +14,7 @@ import {
   onSnapshot,
 } from "./firebase/firebase.utils";
 import ContactsPage from "./pages/contacts/contacts.component";
+import CheckoutPage from "./pages/checkout/checkout.component";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 
 class App extends React.Component {
@@ -60,7 +61,8 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
-          <Route path='/contacts' component={ContactsPage} />
+          <Route exact path='/contacts' component={ContactsPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
           <Route
             path='/signin'
             render={() =>
