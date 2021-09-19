@@ -10,7 +10,7 @@ const persistConfig = { key: "root", storage, whitelist: ["cart"] };
 const unpersistedRootReducer = combineReducers({
   user: userReducer,
   cart: cartReducer,
-  directory: directoryReducer
+  directory: directoryReducer,
 });
 
 const persistedRootReducer = persistReducer(
