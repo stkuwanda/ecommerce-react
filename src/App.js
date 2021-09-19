@@ -18,9 +18,10 @@ import CheckoutPage from "./pages/checkout/checkout.component";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+  // The constructor has been commented out since it's not being used to set state or props 
+  // constructor(props) {
+  //   super(props);
+  // }
 
   unsubscribeFromAuth = null;
   unsubscribeFromDocRef = null;
