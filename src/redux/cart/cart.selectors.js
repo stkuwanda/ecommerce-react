@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import memoize from "lodash.memoize";
 
 export const selectCart = (state) => state.cart;
 
@@ -21,4 +22,10 @@ export const selectCartTotalPrice = createSelector(
   [selectCartItems],
   (cartItems) =>
     cartItems.reduce((acc, item) => item.price * item.quantity + acc, 0)
+);
+
+export const selectCartItem = memoize((item) =>
+  createSelector([selectCartItems], (cartItems) =>
+    cartItems.find((cartItem) => cartItem.id === item.id)
+  )
 );
