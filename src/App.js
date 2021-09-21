@@ -35,10 +35,13 @@ class App extends React.Component {
           next: (snapshot) => {
             let user = { id: snapshot.id, ...snapshot.data() };
             setCurrentUser(user);
-            console.log(
-              "line 36, App.js, componentDidMount(), Current User state:",
-              user
-            );
+            if (process.env.NODE_ENV === "development") {
+              console.log(
+                "line 36, App.js, componentDidMount(), Current User state:",
+                user
+              );
+            }
+            
           },
         });
       }
@@ -47,7 +50,10 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log("Unsubscribing observers... ");
+    if (process.env.NODE_ENV === "development") {
+      console.log("Unsubscribing observers... ");
+    }
+  
     this.unsubscribeFromAuth();
     this.unsubscribeFromDocRef();
   }

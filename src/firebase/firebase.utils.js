@@ -46,45 +46,60 @@ export const signInWithGoogle = async () => {
   try {
     await signInWithPopup(auth, provider);
   } catch (err) {
-    console.log(err, "An error occurred.");
+    if (process.env.NODE_ENV === "development") {
+      console.log(err, "An error occurred.");
+    }
+    alert("An error occurred during this operation!");
   }
 };
 
 // Create A User Profile Document
 export const createUserProfileDocument = async (userAuth, otherData) => {
-  console.log("createUserProfileDocument running...");
+  if (process.env.NODE_ENV === "development") {
+    console.log("createUserProfileDocument running...");
+  }
+
   if (!userAuth) return;
   try {
     const docRef = doc(firestore, `/users/${userAuth.uid}`);
     const snapShotRef = await getDoc(docRef);
-    console.log("DocRef result:", docRef);
-    console.log("Snapshot result", snapShotRef);
+    if (process.env.NODE_ENV === "development") {
+      console.log("DocRef result:", docRef);
+      console.log("Snapshot result", snapShotRef);
+    }
 
     if (!snapShotRef.exists()) {
       let { displayName, email } = userAuth;
       const createdAt = new Date();
       try {
-        console.log(
-          "line 68, firebase.utils.js, createUserProfileDocument(), displayName",
-          displayName
-        );
-        console.log(
-          "line 69, firebase.utils.js, createUserProfileDocument(), otherData",
-          otherData
-        );
-
+        if (process.env.NODE_ENV === "development") {
+          console.log(
+            "line 68, firebase.utils.js, createUserProfileDocument(), displayName",
+            displayName
+          );
+          console.log(
+            "line 69, firebase.utils.js, createUserProfileDocument(), otherData",
+            otherData
+          );
+        }
         await setDoc(docRef, { displayName, email, createdAt, ...otherData });
       } catch (err) {
-        console.log(
-          "line 70, firebase.utils.js, createUserProfileDocument(), Error saving new user to firebase",
-          err.message
-        );
+        if (process.env.NODE_ENV === "development") {
+          console.log(
+            "line 70, firebase.utils.js, createUserProfileDocument(), Error saving new user to firebase",
+            err.message
+          );
+        }
+        alert("An unexpected error occurred during this operation!");
       }
     }
 
     return docRef;
   } catch (err) {
-    console.log(err);
+    if (process.env.NODE_ENV === "development") {
+      console.log(err);
+    }
+    alert('An unexpected error occurred during this operation');
   }
 };
 

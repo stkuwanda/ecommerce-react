@@ -7,10 +7,12 @@ const StripeCheckoutButton = ({ price }) => {
     "pk_test_51Hw3JTHWu7GuFA4aXH0sYqonNE1OMU4EjarH0uwTWKIfVPfyKjehZnEMzfq7SXR5sGWkZDA0cRWRR1PbEfLS0vZQ00fa3ZOzm6";
 
   const onToken = (token) => {
-    console.log(
-      "line 10, stripe-button.component.jsx, StripeCheckoutButto, Token:",
-      token
-    );
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "line 10, stripe-button.component.jsx, StripeCheckoutButto, Token:",
+        token
+      );
+    }
     alert("Payment Successful");
   };
 

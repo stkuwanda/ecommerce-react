@@ -22,21 +22,32 @@ class SignUp extends React.Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { displayName, email, password, confirmPassword } = this.state;
-    console.log(
-      "line 25, sign-up.component.jsx, handleSubmit(), displayName:",
-      displayName
-    );
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "line 25, sign-up.component.jsx, handleSubmit(), displayName:",
+        displayName
+      );
+    }
+
     if (password !== confirmPassword) {
       alert("Passwords Not Matching!");
       return;
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(
-        "line 28, sign-up.component.jsx, handleSubmit(), User:",
-        userCredential.user
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
+
+      if (process.env.NODE_ENV === "development") {
+        console.log(
+          "line 28, sign-up.component.jsx, handleSubmit(), User:",
+          userCredential.user
+        );
+      }
+
       await createUserProfileDocument(userCredential.user, { displayName });
 
       this.setState({
@@ -46,10 +57,13 @@ class SignUp extends React.Component {
         confirmPassword: "",
       });
     } catch (err) {
-      console.log(
-        "line 31, sign-up.component.jsx, handleSubmit(), Error during user creation:",
-        err.message
-      );
+      if (process.env.NODE_ENV === "development") {
+        console.log(
+          "line 31, sign-up.component.jsx, handleSubmit(), Error during user creation:",
+          err.message
+        );
+      }
+      alert('There was an unexpected error during user creation!');
     }
   };
 

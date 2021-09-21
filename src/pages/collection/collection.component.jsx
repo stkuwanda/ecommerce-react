@@ -5,10 +5,12 @@ import CollectionItem from "../../components/collection-item/collection-item.com
 import "./collection.styles.scss";
 
 const CollectionPage = ({ collection }) => {
-  console.log(
-    "line 7, collection.component.jsx, CollectionPage, collection prop:",
-    collection
-  );
+  if (process.env.NODE_ENV === "development") {
+    console.log(
+      "line 7, collection.component.jsx, CollectionPage, collection prop:",
+      collection
+    );
+  }
 
   return (
     <div className='collection-page'>
