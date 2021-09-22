@@ -5,7 +5,6 @@ import {
   HeaderContainer,
   LinkOptionContainer,
   LogoContainer,
-  OptionContainer,
   OptionsContainer,
 } from "./header.styles";
 import CartIcon from "../cart-icon/cart-icon.component";
@@ -28,9 +27,9 @@ const Header = ({ currentUser, isCartDropDownHidden }) => (
         CONTACTS
       </LinkOptionContainer>
       {currentUser ? (
-        <OptionContainer onClick={() => auth.signOut()}>
+        <LinkOptionContainer as='div' onClick={() => auth.signOut()}>
           SIGN OUT
-        </OptionContainer>
+        </LinkOptionContainer>
       ) : (
         <LinkOptionContainer to='/signin'>
           SIGN IN
