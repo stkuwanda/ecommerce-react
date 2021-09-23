@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { addCartItem } from "../../redux/cart/cart.actions";
-import "./collection-item.styles.scss";
 import CustomButton from "../custom-button/custom-button.component";
 import { selectCartItem } from "../../redux/cart/cart.selectors";
 import { AddButton, CollectionFooterContainer, CollectionItemContainer, ImageContainer, NameSpan, PriceSpan } from "./collection-item.styles";
