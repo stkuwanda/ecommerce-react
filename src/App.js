@@ -12,13 +12,16 @@ import {
   auth,
   createUserProfileDocument,
   onSnapshot,
+  addCollectionAndDocuments,
 } from "./firebase/firebase.utils";
 import ContactsPage from "./pages/contacts/contacts.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import { selectCollections } from "./redux/shop/shop.selectors";
+import { selectSections } from "./redux/directory/directory.selectors";
 
 class App extends React.Component {
-  // The constructor has been commented out since it's not being used to set state or props 
+  // The constructor has been commented out since it's not being used to set state or props
   // constructor(props) {
   //   super(props);
   // }
@@ -27,7 +30,7 @@ class App extends React.Component {
   unsubscribeFromDocRef = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, collectionsList } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const docRef = await createUserProfileDocument(user);
@@ -41,11 +44,11 @@ class App extends React.Component {
                 user
               );
             }
-            
           },
         });
       }
       setCurrentUser(null);
+      addCollectionAndDocuments("collections", collectionsList);
     });
   }
 
@@ -53,9 +56,9 @@ class App extends React.Component {
     if (process.env.NODE_ENV === "development") {
       console.log("Unsubscribing observers... ");
     }
-  
-    this.unsubscribeFromAuth();
-    this.unsubscribeFromDocRef();
+
+    if (this.unsubscribeFromAuth) this.unsubscribeFromAuth();
+    if (this.unsubscribeFromDocRef) this.unsubscribeFromDocRef();
   }
 
   render() {
@@ -85,6 +88,7 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  collectionsList: selectSections,
 });
 
 const mapDispatchToProps = (dispatch) => ({

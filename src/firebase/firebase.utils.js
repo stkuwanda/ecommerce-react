@@ -9,6 +9,7 @@ import {
   getDoc,
   setDoc,
   onSnapshot,
+  collection,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -99,11 +100,20 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
     if (process.env.NODE_ENV === "development") {
       console.log(err);
     }
-    alert('An unexpected error occurred during this operation');
+    alert("An unexpected error occurred during this operation");
   }
 };
 
-// Export onSnapShot To Receive Latest Data of a DocumentRef
+// Function to load products into Firestore
+export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(firestore, collectionKey);
+
+  if (process.env.NODE_ENV === "development") {
+    console.log('line 12, firebase.utils.js, addCollectionAndDocuments, CollectionReference Object:', collectionRef);
+  }
+};
+
+// Reexport Utility Functions
 export {
   onSnapshot,
   createUserWithEmailAndPassword,
