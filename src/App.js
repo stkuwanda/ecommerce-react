@@ -11,8 +11,7 @@ import SignInAndSignUpPage from "./pages/signin-and-signup-page/signin-and-signu
 import {
   auth,
   createUserProfileDocument,
-  onSnapshot,
-  addCollectionAndDocuments,
+  onSnapshot
 } from "./firebase/firebase.utils";
 import ContactsPage from "./pages/contacts/contacts.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
