@@ -112,16 +112,11 @@ export const addCollectionAndDocuments = async (
 ) => {
   const collectionRef = collection(firestore, collectionKey);
   const writeBatchObject = writeBatch(firestore);
-  const documentRef = doc(collectionRef);
 
   if (process.env.NODE_ENV === "development") {
     console.log(
       "line 112, firebase.utils.js, addCollectionAndDocuments, CollectionReference Object:",
       collectionRef
-    );
-    console.log(
-      "line 113, firebase.utils.js, addCollectionAndDocuments, DocumentReference Object:",
-      documentRef
     );
   }
 
