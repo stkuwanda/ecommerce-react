@@ -130,9 +130,35 @@ export const addCollectionAndDocuments = async (
   }
 };
 
+// Function to get collections data from firestore into the app
+export const convertCollectionsSnapshotToMap = (collectonsSnapshot) => {
+  const transformedCollectionsList = collectonsSnapshot.docs.map((doc) => {
+    const { title, items } = doc.data();
+    return {
+      id: doc.id,
+      routName: encodeURI(title.toLowerCase()),
+      items,
+      title,
+    };
+  });
+
+  if (process.env.NODE_ENV === "development") {
+    console.log(
+      "line 141, firebase.utils.js, convertCollectionsSnapshotToMap, Collections List:",
+      transformedCollectionsList
+    );
+  }
+
+  return transformedCollectionsList.reduce((acc, collection) => {
+    acc[collection.title.toLowerCase()] = collection;
+    return acc;
+  }, {});
+};
+
 // Reexport Utility Functions
 export {
   onSnapshot,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  collection,
 };
