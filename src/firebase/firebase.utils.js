@@ -10,6 +10,7 @@ import {
   setDoc,
   onSnapshot,
   collection,
+  writeBatch,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -105,11 +106,32 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
 };
 
 // Function to load products into Firestore
-export const addCollectionAndDocuments = (collectionKey, objectsToAdd) => {
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
   const collectionRef = collection(firestore, collectionKey);
+  const writeBatchObject = writeBatch(firestore);
+  const documentRef = doc(collectionRef);
 
   if (process.env.NODE_ENV === "development") {
-    console.log('line 12, firebase.utils.js, addCollectionAndDocuments, CollectionReference Object:', collectionRef);
+    console.log(
+      "line 112, firebase.utils.js, addCollectionAndDocuments, CollectionReference Object:",
+      collectionRef
+    );
+    console.log(
+      "line 113, firebase.utils.js, addCollectionAndDocuments, DocumentReference Object:",
+      documentRef
+    );
+  }
+
+  if (objectsToAdd) {
+    objectsToAdd.forEach((obj) => {
+      const docRef = doc(collectionRef);
+      writeBatchObject.set(docRef, obj);
+    });
+
+    return await writeBatchObject.commit();
   }
 };
 

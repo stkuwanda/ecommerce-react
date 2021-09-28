@@ -18,7 +18,6 @@ import ContactsPage from "./pages/contacts/contacts.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 import { selectCollections } from "./redux/shop/shop.selectors";
-import { selectSections } from "./redux/directory/directory.selectors";
 
 class App extends React.Component {
   // The constructor has been commented out since it's not being used to set state or props
@@ -48,7 +47,7 @@ class App extends React.Component {
         });
       }
       setCurrentUser(null);
-      addCollectionAndDocuments("collections", collectionsList);
+      addCollectionAndDocuments("collections", collectionsList.map(({title, items}) => ({title, items})));
     });
   }
 
@@ -88,7 +87,7 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-  collectionsList: selectSections,
+  collectionsList: selectCollections,
 });
 
 const mapDispatchToProps = (dispatch) => ({
