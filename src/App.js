@@ -17,7 +17,6 @@ import {
 import ContactsPage from "./pages/contacts/contacts.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import { selectCurrentUser } from "./redux/user/user.selectors";
-import { selectCollections } from "./redux/shop/shop.selectors";
 
 class App extends React.Component {
   // The constructor has been commented out since it's not being used to set state or props
@@ -29,7 +28,7 @@ class App extends React.Component {
   unsubscribeFromDocRef = null;
 
   componentDidMount() {
-    const { setCurrentUser, collectionsList } = this.props;
+    const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const docRef = await createUserProfileDocument(user);
@@ -47,7 +46,6 @@ class App extends React.Component {
         });
       }
       setCurrentUser(null);
-      addCollectionAndDocuments("collections", collectionsList.map(({title, items}) => ({title, items})));
     });
   }
 
@@ -87,7 +85,6 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-  collectionsList: selectCollections,
 });
 
 const mapDispatchToProps = (dispatch) => ({
