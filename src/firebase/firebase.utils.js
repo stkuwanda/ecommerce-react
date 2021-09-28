@@ -136,7 +136,7 @@ export const convertCollectionsSnapshotToMap = (collectonsSnapshot) => {
     const { title, items } = doc.data();
     return {
       id: doc.id,
-      routName: encodeURI(title.toLowerCase()),
+      routeName: encodeURI(title.toLowerCase()),
       items,
       title,
     };
