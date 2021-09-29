@@ -1,7 +1,7 @@
 import { ShopActionTypes } from "./shop.types";
 const INITIAL_STATE = {
   SHOP_DATA: {},
-  isFetching: false,
+  isFetching: true,
   errMessage: undefined,
 };
 
