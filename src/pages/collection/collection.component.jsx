@@ -7,7 +7,7 @@ import "./collection.styles.scss";
 const CollectionPage = ({ collection }) => {
   if (process.env.NODE_ENV === "development") {
     console.log(
-      "line 7, collection.component.jsx, CollectionPage, collection prop:",
+      "line 10, collection.component.jsx, CollectionPage, collection prop:",
       collection
     );
   }

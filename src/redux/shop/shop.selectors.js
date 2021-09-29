@@ -8,12 +8,12 @@ export const selectShopData = createSelector(
   (shop) => shop.SHOP_DATA
 );
 
-export const selectCollections = createSelector(
-  [selectShop],
-  (shop) => Object.values(shop.SHOP_DATA)
+export const selectCollections = createSelector([selectShop], (shop) =>
+  Object.values(shop.SHOP_DATA)
 );
 
 export const selectCollection = memoize((collectionUrlParam) =>
-  createSelector([selectShopData], (shopData) => shopData[collectionUrlParam]
+  createSelector([selectShopData], (shopData) =>
+    shopData[collectionUrlParam] ? shopData[collectionUrlParam] : null
   )
 );

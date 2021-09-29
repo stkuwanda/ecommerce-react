@@ -24,7 +24,7 @@ class SignUp extends React.Component {
     const { displayName, email, password, confirmPassword } = this.state;
     if (process.env.NODE_ENV === "development") {
       console.log(
-        "line 25, sign-up.component.jsx, handleSubmit(), displayName:",
+        "line 27, sign-up.component.jsx, handleSubmit(), displayName:",
         displayName
       );
     }
@@ -43,7 +43,7 @@ class SignUp extends React.Component {
 
       if (process.env.NODE_ENV === "development") {
         console.log(
-          "line 28, sign-up.component.jsx, handleSubmit(), User:",
+          "line 46, sign-up.component.jsx, handleSubmit(), User:",
           userCredential.user
         );
       }
@@ -59,7 +59,7 @@ class SignUp extends React.Component {
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
         console.log(
-          "line 31, sign-up.component.jsx, handleSubmit(), Error during user creation:",
+          "line 62, sign-up.component.jsx, handleSubmit(), Error during user creation:",
           err.message
         );
       }

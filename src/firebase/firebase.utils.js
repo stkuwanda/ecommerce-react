@@ -76,11 +76,11 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
       try {
         if (process.env.NODE_ENV === "development") {
           console.log(
-            "line 68, firebase.utils.js, createUserProfileDocument(), displayName",
+            "line 79, firebase.utils.js, createUserProfileDocument(), displayName",
             displayName
           );
           console.log(
-            "line 69, firebase.utils.js, createUserProfileDocument(), otherData",
+            "line 83, firebase.utils.js, createUserProfileDocument(), otherData",
             otherData
           );
         }
@@ -88,7 +88,7 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
       } catch (err) {
         if (process.env.NODE_ENV === "development") {
           console.log(
-            "line 70, firebase.utils.js, createUserProfileDocument(), Error saving new user to firebase",
+            "line 91, firebase.utils.js, createUserProfileDocument(), Error saving new user to firebase",
             err.message
           );
         }
@@ -115,7 +115,7 @@ export const addCollectionAndDocuments = async (
 
   if (process.env.NODE_ENV === "development") {
     console.log(
-      "line 112, firebase.utils.js, addCollectionAndDocuments, CollectionReference Object:",
+      "line 118, firebase.utils.js, addCollectionAndDocuments, CollectionReference Object:",
       collectionRef
     );
   }
@@ -134,6 +134,7 @@ export const addCollectionAndDocuments = async (
 export const convertCollectionsSnapshotToMap = (collectonsSnapshot) => {
   const transformedCollectionsList = collectonsSnapshot.docs.map((doc) => {
     const { title, items } = doc.data();
+    
     return {
       id: doc.id,
       routeName: encodeURI(title.toLowerCase()),
@@ -144,7 +145,7 @@ export const convertCollectionsSnapshotToMap = (collectonsSnapshot) => {
 
   if (process.env.NODE_ENV === "development") {
     console.log(
-      "line 141, firebase.utils.js, convertCollectionsSnapshotToMap, Collections List:",
+      "line 148, firebase.utils.js, convertCollectionsSnapshotToMap, Collections List:",
       transformedCollectionsList
     );
   }

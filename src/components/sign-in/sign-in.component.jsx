@@ -24,7 +24,7 @@ class SignIn extends React.Component {
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
         console.log(
-          "line 20, sign-in.component.jsx, handleSubmit(), Error signing in user:",
+          "line 27, sign-in.component.jsx, handleSubmit(), Error signing in user:",
           err.message
         );
       }

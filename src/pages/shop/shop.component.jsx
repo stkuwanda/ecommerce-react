@@ -8,10 +8,20 @@ import {
 } from "../../firebase/firebase.utils";
 import CollectionsOverview from "../../components/collections-overview/collections-overview.component";
 import CollectionPage from "../collection/collection.component";
+import withSpinner from "../../components/with-spinner/with-spinner.component";
 import { updateCollections } from "../../redux/shop/shop.actions";
 import { connect } from "react-redux";
 
+// Creating Wrapped Components
+const CollectionsOverviewWithSpinner = withSpinner(CollectionsOverview);
+const CollectionPageWithSpinner = withSpinner(CollectionPage);
+
 class ShopPage extends React.Component {
+  constructor() {
+    super();
+    this.state = { loading: true };
+  }
+
   unsubscribeFromSnapshot = null;
 
   componentDidMount() {
@@ -20,25 +30,26 @@ class ShopPage extends React.Component {
 
     if (process.env.NODE_ENV === "development") {
       console.log(
-        "line 20, shop.component.jsx, componentDidMount, CollectionRef Object:",
+        "line 23, shop.component.jsx, componentDidMount, CollectionRef Object:",
         collectionRef
       );
     }
 
     onSnapshot(collectionRef, {
-      next: async (snapshot) => {
+      next: (snapshot) => {
         if (process.env.NODE_ENV === "development") {
           console.log(
-            "line 29, shop.component.jsx, onSnapshot, QuerySnapshot Object:",
+            "line 32, shop.component.jsx, onSnapshot, QuerySnapshot Object:",
             snapshot
           );
         }
         const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
         updateCollections(collectionsMap);
-        
+        this.setState({ loading: false });
+
         if (process.env.NODE_ENV === "development") {
           console.log(
-            "line 36, shop.component.jsx, onSnapshot, Collections Map Object:",
+            "line 41, shop.component.jsx, onSnapshot, Collections Map Object:",
             collectionsMap
           );
         }
@@ -47,7 +58,7 @@ class ShopPage extends React.Component {
         alert("An unexpected error occurred!");
         if (process.env.NODE_ENV === "development") {
           console.log(
-            "line 45, shop.component.jsx, onSnapshot, Error Retrieving QuerySnapshot:",
+            "line 50, shop.component.jsx, onSnapshot, Error Retrieving QuerySnapshot:",
             err.message
           );
         }
@@ -57,19 +68,29 @@ class ShopPage extends React.Component {
 
   render() {
     const { match } = this.props;
+    const { loading } = this.state;
 
     if (process.env.NODE_ENV === "development") {
       console.log(
-        "line 58, shop.component.jsx, ShopPage, Match object:",
+        "line 63, shop.component.jsx, ShopPage, Match object:",
         match
       );
     }
+
     return (
       <div className='shop-page'>
-        <Route exact path={match.path} component={CollectionsOverview} />
+        <Route
+          exact
+          path={match.path}
+          render={(props) => (
+            <CollectionsOverviewWithSpinner isLoading={loading} {...props} />
+          )}
+        />
         <Route
           path={`${match.path}/:collectionId`}
-          component={CollectionPage}
+          render={(props) => (
+            <CollectionPageWithSpinner isLoading={loading} {...props} />
+          )}
         />
       </div>
     );
@@ -77,7 +98,8 @@ class ShopPage extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  updateCollections: (collectionsMap) => dispatch(updateCollections(collectionsMap)),
+  updateCollections: (collectionsMap) =>
+    dispatch(updateCollections(collectionsMap)),
 });
 
 export default connect(null, mapDispatchToProps)(ShopPage);
