@@ -3,7 +3,8 @@ import { Route } from "react-router-dom";
 import {
   collection,
   firestore,
-  onSnapshot,
+  //onSnapshot,
+  getDocs,
   convertCollectionsSnapshotToMap,
 } from "../../firebase/firebase.utils";
 import CollectionsOverview from "../../components/collections-overview/collections-overview.component";
@@ -35,35 +36,61 @@ class ShopPage extends React.Component {
       );
     }
 
-    onSnapshot(collectionRef, {
-      next: (snapshot) => {
-        if (process.env.NODE_ENV === "development") {
-          console.log(
-            "line 32, shop.component.jsx, onSnapshot, QuerySnapshot Object:",
-            snapshot
-          );
-        }
+    // onSnapshot(collectionRef, {
+    //   next: (snapshot) => {
+    //     if (process.env.NODE_ENV === "development") {
+    //       console.log(
+    //         "line 32, shop.component.jsx, onSnapshot, QuerySnapshot Object:",
+    //         snapshot
+    //       );
+    //     }
+    //     const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
+    //     updateCollections(collectionsMap);
+    //     this.setState({ loading: false });
+
+    //     if (process.env.NODE_ENV === "development") {
+    //       console.log(
+    //         "line 41, shop.component.jsx, onSnapshot, Collections Map Object:",
+    //         collectionsMap
+    //       );
+    //     }
+    //   },
+    //   error: (err) => {
+    //     alert("An unexpected error occurred!");
+    //     if (process.env.NODE_ENV === "development") {
+    //       console.log(
+    //         "line 50, shop.component.jsx, onSnapshot, Error Retrieving QuerySnapshot:",
+    //         err.message
+    //       );
+    //     }
+    //     this.setState({ loading: false });
+    //   },
+    // });
+
+    // Get shop data from firestore once off when app mounts
+    getDocs(collectionRef)
+      .then((snapshot) => {
         const collectionsMap = convertCollectionsSnapshotToMap(snapshot);
         updateCollections(collectionsMap);
         this.setState({ loading: false });
 
         if (process.env.NODE_ENV === "development") {
           console.log(
-            "line 41, shop.component.jsx, onSnapshot, Collections Map Object:",
+            "line 79, shop.component.jsx, getDocs.then, Collections Map Object:",
             collectionsMap
           );
         }
-      },
-      error: (err) => {
+      })
+      .catch((err) => {
         alert("An unexpected error occurred!");
         if (process.env.NODE_ENV === "development") {
           console.log(
-            "line 50, shop.component.jsx, onSnapshot, Error Retrieving QuerySnapshot:",
+            "shop.component.jsx, getDocs.then, Error Retrieving QuerySnapshot:",
             err.message
           );
         }
-      },
-    });
+        this.setState({ loading: false });
+      });
   }
 
   render() {

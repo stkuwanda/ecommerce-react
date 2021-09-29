@@ -7,6 +7,7 @@ import {
   getFirestore,
   doc,
   getDoc,
+  getDocs,
   setDoc,
   onSnapshot,
   collection,
@@ -162,4 +163,5 @@ export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   collection,
+  getDocs
 };
