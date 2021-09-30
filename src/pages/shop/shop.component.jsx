@@ -1,16 +1,9 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import { createStructuredSelector } from "reselect";
 import { fetchCollectionsStartAsync } from "../../redux/shop/shop.actions";
-import { selectIsFetchingCollections } from "../../redux/shop/shop.selectors";
-import CollectionsOverview from "../../components/collections-overview/collections-overview.component";
-import CollectionPage from "../collection/collection.component";
-import withSpinner from "../../components/with-spinner/with-spinner.component";
 import { connect } from "react-redux";
-
-// Creating Wrapped Components
-const CollectionsOverviewWithSpinner = withSpinner(CollectionsOverview);
-const CollectionPageWithSpinner = withSpinner(CollectionPage);
+import CollectionsOverviewContainer from "../../components/collections-overview/collections-overview.container";
+import CollectionContainer from "../collection/collection.container";
 
 class ShopPage extends React.Component {
   componentDidMount() {
@@ -18,11 +11,11 @@ class ShopPage extends React.Component {
   }
 
   render() {
-    const { match, isFectching } = this.props;
+    const { match } = this.props;
 
     if (process.env.NODE_ENV === "development") {
       console.log(
-        "line 25, shop.component.jsx, ShopPage, Match object:",
+        "line 23, shop.component.jsx, ShopPage, Match object:",
         match
       );
     }
@@ -32,30 +25,19 @@ class ShopPage extends React.Component {
         <Route
           exact
           path={match.path}
-          render={(props) => (
-            <CollectionsOverviewWithSpinner
-              isLoading={isFectching}
-              {...props}
-            />
-          )}
+          component={CollectionsOverviewContainer}
         />
         <Route
           path={`${match.path}/:collectionId`}
-          render={(props) => (
-            <CollectionPageWithSpinner isLoading={isFectching} {...props} />
-          )}
+          component={CollectionContainer}
         />
       </div>
     );
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  isFectching: selectIsFetchingCollections,
-});
-
 const mapDispatchToProps = (dispatch) => ({
   fetchCollections: () => dispatch(fetchCollectionsStartAsync()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
+export default connect(null, mapDispatchToProps)(ShopPage);
