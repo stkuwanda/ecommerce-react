@@ -36,7 +36,7 @@ export function* fetchCollectionsAsync() {
 }
 
 export function* fetchCollectionsStart() {
-  // takeEvery starts a new fetchCollectionsAsync task whenever it picks up a FETCH_COLLECTIONS_START action
+  // takeLatest starts a new fetchCollectionsAsync task whenever it picks up a FETCH_COLLECTIONS_START action
   yield takeLatest(
     ShopActionTypes.FETCH_COLLECTIONS_START,
     fetchCollectionsAsync
