@@ -27,25 +27,25 @@ class App extends React.Component {
   unsubscribeFromDocRef = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const docRef = await createUserProfileDocument(user);
-        this.unsubscribeFromDocRef = onSnapshot(docRef, {
-          next: (snapshot) => {
-            let user = { id: snapshot.id, ...snapshot.data() };
-            setCurrentUser(user);
-            if (process.env.NODE_ENV === "development") {
-              console.log(
-                "line 36, App.js, componentDidMount(), Current User state:",
-                user
-              );
-            }
-          },
-        });
-      }
-      setCurrentUser(null);
-    });
+    // const { setCurrentUser } = this.props;
+    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
+    //   if (user) {
+    //     const docRef = await createUserProfileDocument(user);
+    //     this.unsubscribeFromDocRef = onSnapshot(docRef, {
+    //       next: (snapshot) => {
+    //         let user = { id: snapshot.id, ...snapshot.data() };
+    //         setCurrentUser(user);
+    //         if (process.env.NODE_ENV === "development") {
+    //           console.log(
+    //             "line 36, App.js, componentDidMount(), Current User state:",
+    //             user
+    //           );
+    //         }
+    //       },
+    //     });
+    //   }
+    //   setCurrentUser(null);
+    // });
   }
 
   componentWillUnmount() {

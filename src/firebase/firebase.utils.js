@@ -41,13 +41,13 @@ export const firestore = getFirestore(app);
 export const auth = getAuth(app);
 
 // Setup Google popup for sign up
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ prompt: "select_account" });
+export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
 // Sign In with Google
 export const signInWithGoogle = async () => {
   try {
-    await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, googleProvider);
   } catch (err) {
     if (process.env.NODE_ENV === "development") {
       console.log(err, "An error occurred.");
@@ -135,7 +135,7 @@ export const addCollectionAndDocuments = async (
 export const convertCollectionsSnapshotToMap = (collectonsSnapshot) => {
   const transformedCollectionsList = collectonsSnapshot.docs.map((doc) => {
     const { title, items } = doc.data();
-    
+
     return {
       id: doc.id,
       routeName: encodeURI(title.toLowerCase()),
@@ -163,5 +163,7 @@ export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   collection,
-  getDocs
+  getDocs,
+  getDoc,
+  signInWithPopup,
 };
