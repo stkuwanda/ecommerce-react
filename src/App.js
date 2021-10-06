@@ -8,11 +8,6 @@ import "./App.css";
 import ShopPage from "./pages/shop/shop.component";
 import Header from "./components/header/header.component";
 import SignInAndSignUpPage from "./pages/signin-and-signup-page/signin-and-signup-page.component";
-import {
-  auth,
-  createUserProfileDocument,
-  onSnapshot
-} from "./firebase/firebase.utils";
 import ContactsPage from "./pages/contacts/contacts.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import { selectCurrentUser } from "./redux/user/user.selectors";

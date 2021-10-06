@@ -63,9 +63,11 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
   }
 
   if (!userAuth) return;
+  
   try {
     const docRef = doc(firestore, `/users/${userAuth.uid}`);
     const snapShotRef = await getDoc(docRef);
+
     if (process.env.NODE_ENV === "development") {
       console.log("DocRef result:", docRef);
       console.log("Snapshot result", snapShotRef);
