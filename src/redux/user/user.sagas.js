@@ -8,28 +8,37 @@ import {
   signInWithEmailAndPassword,
 } from "../../firebase/firebase.utils";
 import UserActionTypes from "./user.types";
-import {
-  googleSignInFailure,
-  googleSignInSuccess,
-  emailSignInFailure,
-  emailSignInSuccess,
-} from "./user.actions";
+import { signInFailure, signInSuccess } from "./user.actions";
 
-function* signInWithGoogle() {
+function* setCurrentUserSaga(user) {
   try {
-    const { user } = yield signInWithPopup(auth, googleProvider);
+    const userDocRef = yield call(createUserProfileDocument, user);
+    const userDocSnap = yield call(getDoc, userDocRef);
+    yield put(signInSuccess({ id: userDocSnap.id, ...userDocSnap.data() }));
+  } catch (err) {
+    yield put(signInFailure(err));
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "user.sagas.js, getUserDocSnapshot, Error signing in:",
+        err.message
+      );
+    }
+    alert("An error occurred while trying to sign in.");
+  }
+}
+
+function* signInWithGoogleSaga() {
+  try {
+    const { user } = yield call(signInWithPopup, auth, googleProvider);
 
     if (process.env.NODE_ENV === "development") {
       console.log("user.sagas.js, signInWithPopup, Auth User Ref:", user);
     }
 
-    const userDocRef = yield call(createUserProfileDocument, user);
-    const userDocSnap = yield getDoc(userDocRef);
-    yield put(
-      googleSignInSuccess({ id: userDocSnap.id, ...userDocSnap.data() })
-    );
+    yield call(setCurrentUserSaga, user);
   } catch (err) {
-    yield put(googleSignInFailure(err));
+    yield put(signInFailure(err));
 
     if (process.env.NODE_ENV === "development") {
       console.log(
@@ -41,25 +50,22 @@ function* signInWithGoogle() {
   }
 }
 
-function* onGoogleSignInStart() {
-  yield takeLatest(UserActionTypes.GOOGLE_SIGN_IN_START, signInWithGoogle);
-}
-
-function* signInWithEmail({ payload: { email, password } }) {
+function* signInWithEmailSaga({ payload: { email, password } }) {
   try {
-    const { user } = yield signInWithEmailAndPassword(auth, email, password);
+    const { user } = yield call(
+      signInWithEmailAndPassword,
+      auth,
+      email,
+      password
+    );
 
     if (process.env.NODE_ENV === "development") {
       console.log("user.sagas.js, signInWithEmail, Auth User Ref:", user);
     }
 
-    const userDocRef = yield call(createUserProfileDocument, user);
-    const userDocSnap = yield getDoc(userDocRef);
-    yield put(
-      emailSignInSuccess({ id: userDocSnap.id, ...userDocSnap.data() })
-    );
+    yield call(setCurrentUserSaga, user);
   } catch (err) {
-    yield put(emailSignInFailure(err));
+    yield put(signInFailure(err));
 
     if (process.env.NODE_ENV === "development") {
       console.log(
@@ -71,10 +77,14 @@ function* signInWithEmail({ payload: { email, password } }) {
   }
 }
 
-function* onEmailSignInStart() {
-  yield takeLatest(UserActionTypes.EMAIL_SIGN_IN_START, signInWithEmail);
+function* onGoogleSignInStartSaga() {
+  yield takeLatest(UserActionTypes.GOOGLE_SIGN_IN_START, signInWithGoogleSaga);
+}
+
+function* onEmailSignInStartSaga() {
+  yield takeLatest(UserActionTypes.EMAIL_SIGN_IN_START, signInWithEmailSaga);
 }
 
 export function* userSagas() {
-  yield all([call(onGoogleSignInStart), call(onEmailSignInStart)]);
+  yield all([call(onGoogleSignInStartSaga), call(onEmailSignInStartSaga)]);
 }

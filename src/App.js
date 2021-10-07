@@ -2,7 +2,6 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { setCurrentUser } from "./redux/user/user.actions";
 import HomePage from "./pages/homepage/homepage.component";
 import "./App.css";
 import ShopPage from "./pages/shop/shop.component";
@@ -17,40 +16,6 @@ class App extends React.Component {
   // constructor(props) {
   //   super(props);
   // }
-
-  unsubscribeFromAuth = null;
-  unsubscribeFromDocRef = null;
-
-  componentDidMount() {
-    // const { setCurrentUser } = this.props;
-    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async (user) => {
-    //   if (user) {
-    //     const docRef = await createUserProfileDocument(user);
-    //     this.unsubscribeFromDocRef = onSnapshot(docRef, {
-    //       next: (snapshot) => {
-    //         let user = { id: snapshot.id, ...snapshot.data() };
-    //         setCurrentUser(user);
-    //         if (process.env.NODE_ENV === "development") {
-    //           console.log(
-    //             "line 36, App.js, componentDidMount(), Current User state:",
-    //             user
-    //           );
-    //         }
-    //       },
-    //     });
-    //   }
-    //   setCurrentUser(null);
-    // });
-  }
-
-  componentWillUnmount() {
-    if (process.env.NODE_ENV === "development") {
-      console.log("Unsubscribing observers... ");
-    }
-
-    if (this.unsubscribeFromAuth) this.unsubscribeFromAuth();
-    if (this.unsubscribeFromDocRef) this.unsubscribeFromDocRef();
-  }
 
   render() {
     return (
@@ -81,8 +46,4 @@ const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);
