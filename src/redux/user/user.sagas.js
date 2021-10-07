@@ -6,6 +6,7 @@ import {
   googleProvider,
   getDoc,
   signInWithEmailAndPassword,
+  getCurrentAuthUser,
 } from "../../firebase/firebase.utils";
 import UserActionTypes from "./user.types";
 import { signInFailure, signInSuccess } from "./user.actions";
@@ -46,7 +47,7 @@ function* signInWithGoogleSaga() {
         err.message
       );
     }
-    alert("An error occurred while trying to sign in with Google.");
+    alert("Sign in with Google failed. Check your network and try again.");
   }
 }
 
@@ -73,7 +74,28 @@ function* signInWithEmailSaga({ payload: { email, password } }) {
         err.message
       );
     }
-    alert("An error occurred while trying to sign in with email and password.");
+    alert("Sign in failed. Check your network and verify your credentials before reattempting to sign in.");
+  }
+}
+
+function* isUserAuthenticatedSaga() {
+  try{
+    const userAuth = yield call(getCurrentAuthUser);
+
+    if(!userAuth) return;
+
+    yield call(setCurrentUserSaga, userAuth);
+  }catch(err){
+    yield put(signInFailure(err));
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "user.sagas.js, isUserAuthenticatedSaga, Error signing in:",
+        err.message
+      );
+    }
+
+    alert("This session could not be authenticated. Try again later.");
   }
 }
 
@@ -85,6 +107,14 @@ function* onEmailSignInStartSaga() {
   yield takeLatest(UserActionTypes.EMAIL_SIGN_IN_START, signInWithEmailSaga);
 }
 
+function* onCheckUserSessionSaga() {
+  yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticatedSaga);
+}
+
 export function* userSagas() {
-  yield all([call(onGoogleSignInStartSaga), call(onEmailSignInStartSaga)]);
+  yield all([
+    call(onGoogleSignInStartSaga),
+    call(onEmailSignInStartSaga),
+    call(onCheckUserSessionSaga),
+  ]);
 }

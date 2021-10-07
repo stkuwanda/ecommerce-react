@@ -159,6 +159,16 @@ export const convertCollectionsSnapshotToMap = (collectonsSnapshot) => {
   }, {});
 };
 
+// To be used to check validity of a user's authentication
+export const getCurrentAuthUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged( userAuth => {
+      unsubscribe();
+      resolve(userAuth);
+    }, reject)
+  });
+}
+
 // Reexport Utility Functions
 export {
   onSnapshot,
