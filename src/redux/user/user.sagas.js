@@ -14,13 +14,18 @@ import {
   signInSuccess,
   signOutFailure,
   signOutSuccess,
+  startLoader,
+  stopLoader
 } from "./user.actions";
 
 function* signOutUserSaga() {
   try {
+    yield put(startLoader());
     yield auth.signOut();
+    yield put(stopLoader());
     yield put(signOutSuccess());
   } catch (err) {
+    yield put(stopLoader());
     yield put(signOutFailure(err));
 
     if (process.env.NODE_ENV === "development") {
@@ -53,6 +58,7 @@ function* setCurrentUserSaga(user) {
 
 function* signInWithGoogleSaga() {
   try {
+    yield put(startLoader());
     const { user } = yield call(signInWithPopup, auth, googleProvider);
 
     if (process.env.NODE_ENV === "development") {
@@ -60,7 +66,9 @@ function* signInWithGoogleSaga() {
     }
 
     yield call(setCurrentUserSaga, user);
+    yield put(stopLoader());
   } catch (err) {
+    yield put(stopLoader());
     yield put(signInFailure(err));
 
     if (process.env.NODE_ENV === "development") {
@@ -75,6 +83,7 @@ function* signInWithGoogleSaga() {
 
 function* signInWithEmailSaga({ payload: { email, password } }) {
   try {
+    yield put(startLoader());
     const { user } = yield call(
       signInWithEmailAndPassword,
       auth,
@@ -87,7 +96,9 @@ function* signInWithEmailSaga({ payload: { email, password } }) {
     }
 
     yield call(setCurrentUserSaga, user);
+    yield put(stopLoader());
   } catch (err) {
+    yield put(stopLoader());
     yield put(signInFailure(err));
 
     if (process.env.NODE_ENV === "development") {
@@ -102,7 +113,7 @@ function* signInWithEmailSaga({ payload: { email, password } }) {
   }
 }
 
-function* isUserAuthenticatedSaga() {
+function* checkUserAuthenticationSaga() {
   try {
     const userAuth = yield call(getCurrentAuthUser);
 
@@ -132,7 +143,7 @@ function* onEmailSignInStartSaga() {
 }
 
 function* onCheckUserSessionSaga() {
-  yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticatedSaga);
+  yield takeLatest(UserActionTypes.CHECK_USER_SESSION, checkUserAuthenticationSaga);
 }
 
 function* onSignOutStartSaga() {

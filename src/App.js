@@ -6,11 +6,11 @@ import HomePage from "./pages/homepage/homepage.component";
 import "./App.css";
 import ShopPage from "./pages/shop/shop.component";
 import Header from "./components/header/header.component";
-import SignInAndSignUpPage from "./pages/signin-and-signup-page/signin-and-signup-page.component";
 import ContactsPage from "./pages/contacts/contacts.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import { checkUserSession } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import SignInAndSignUpContainer from "./pages/signin-and-signup-page/sign-in-and-sign-page.container";
 
 class App extends React.Component {
   // The constructor has been commented out since it's not being used to set state or props
@@ -38,7 +38,7 @@ class App extends React.Component {
               this.props.currentUser ? (
                 <Redirect to='/' />
               ) : (
-                <SignInAndSignUpPage />
+                <SignInAndSignUpContainer />
               )
             }
           />

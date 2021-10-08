@@ -41,3 +41,7 @@ export const signOutFailure = (err) => ({
   type: UserActionTypes.SIGN_OUT_FAILURE,
   payload: err,
 });
+
+export const startLoader = () => ({ type: UserActionTypes.START_LOADER });
+
+export const stopLoader = () => ({ type: UserActionTypes.STOP_LOADER });
