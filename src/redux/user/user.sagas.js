@@ -9,7 +9,29 @@ import {
   getCurrentAuthUser,
 } from "../../firebase/firebase.utils";
 import UserActionTypes from "./user.types";
-import { signInFailure, signInSuccess } from "./user.actions";
+import {
+  signInFailure,
+  signInSuccess,
+  signOutFailure,
+  signOutSuccess,
+} from "./user.actions";
+
+function* signOutUserSaga() {
+  try {
+    yield auth.signOut();
+    yield put(signOutSuccess());
+  } catch (err) {
+    yield put(signOutFailure(err));
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "user.sagas.js, signOutUserSaga, Error signing out:",
+        err.message
+      );
+    }
+    alert("An error occurred while trying to sign out.");
+  }
+}
 
 function* setCurrentUserSaga(user) {
   try {
@@ -74,18 +96,20 @@ function* signInWithEmailSaga({ payload: { email, password } }) {
         err.message
       );
     }
-    alert("Sign in failed. Check your network and verify your credentials before reattempting to sign in.");
+    alert(
+      "Sign in failed. Check your network and verify your credentials before reattempting to sign in."
+    );
   }
 }
 
 function* isUserAuthenticatedSaga() {
-  try{
+  try {
     const userAuth = yield call(getCurrentAuthUser);
 
-    if(!userAuth) return;
+    if (!userAuth) return;
 
     yield call(setCurrentUserSaga, userAuth);
-  }catch(err){
+  } catch (err) {
     yield put(signInFailure(err));
 
     if (process.env.NODE_ENV === "development") {
@@ -111,10 +135,15 @@ function* onCheckUserSessionSaga() {
   yield takeLatest(UserActionTypes.CHECK_USER_SESSION, isUserAuthenticatedSaga);
 }
 
+function* onSignOutStartSaga() {
+  yield takeLatest(UserActionTypes.SIGN_OUT_START, signOutUserSaga);
+}
+
 export function* userSagas() {
   yield all([
     call(onGoogleSignInStartSaga),
     call(onEmailSignInStartSaga),
     call(onCheckUserSessionSaga),
+    call(onSignOutStartSaga),
   ]);
 }
