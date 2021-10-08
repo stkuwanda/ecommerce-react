@@ -48,7 +48,6 @@ function* setCurrentUserAfterSignUpSaga({ payload: { user, otherData } }) {
 }
 
 function* signUpSaga({ payload: { displayName, email, password } }) {
-  yield console.log("signUpSaga displayName:", displayName);
   try {
     yield put(startLoader());
     const { user } = yield createUserWithEmailAndPassword(
