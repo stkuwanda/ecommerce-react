@@ -15,7 +15,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
     case CartActionTypes.RENOVE_ITEM:
       return {
         ...state,
-        cartItems: removeCartItem(state.cartItems, action.payload)
+        cartItems: removeCartItem(state.cartItems, action.payload),
       };
     case CartActionTypes.CLEAR_ITEM_FROM_CART:
       return {
@@ -24,6 +24,8 @@ const cartReducer = (state = INITIAL_STATE, action) => {
           (item) => item.id !== action.payload.id
         ),
       };
+    case CartActionTypes.CLEAR_CART:
+      return { ...state, cartItems: [] };
     default:
       return state;
   }
