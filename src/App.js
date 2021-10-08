@@ -9,8 +9,13 @@ import Header from "./components/header/header.component";
 import ContactsPage from "./pages/contacts/contacts.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 import { checkUserSession } from "./redux/user/user.actions";
-import { selectCurrentUser } from "./redux/user/user.selectors";
+import {
+  selectCurrentUser,
+  selectLoadingStatus,
+} from "./redux/user/user.selectors";
 import SignInAndSignUpContainer from "./pages/signin-and-signup-page/sign-in-and-sign-page.container";
+import { compose } from "redux";
+import withSpinner from "./components/with-spinner/with-spinner.component";
 
 class App extends React.Component {
   // The constructor has been commented out since it's not being used to set state or props
@@ -50,10 +55,14 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  isLoading: selectLoadingStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   checkUserSession: () => dispatch(checkUserSession()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withSpinner
+)(App);
