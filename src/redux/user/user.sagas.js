@@ -7,6 +7,7 @@ import {
   getDoc,
   signInWithEmailAndPassword,
   getCurrentAuthUser,
+  createUserWithEmailAndPassword,
 } from "../../firebase/firebase.utils";
 import UserActionTypes from "./user.types";
 import {
@@ -14,9 +15,61 @@ import {
   signInSuccess,
   signOutFailure,
   signOutSuccess,
+  signUpFailure,
+  signUpSuccess,
   startLoader,
-  stopLoader
+  stopLoader,
 } from "./user.actions";
+
+function* setCurrentUserAfterSignUpSaga({ payload: { user, otherData } }) {
+  if (process.env.NODE_ENV === "development") {
+    yield console.log("user:", user);
+    yield console.log("otherData:", otherData);
+  }
+
+  try {
+    yield setCurrentUserSaga(user, otherData);
+    yield put(stopLoader());
+  } catch (err) {
+    yield put(stopLoader());
+    yield put(signUpFailure(err));
+
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "user.sagas.js, setCurrentUserAfterSignUpSaga, Error setting up user:",
+        err.message
+      );
+    }
+
+    alert(
+      "An error occurred while trying to set you up. Refresh the page and retry the operation."
+    );
+  }
+}
+
+function* signUpSaga({ payload: { displayName, email, password } }) {
+  yield console.log("signUpSaga displayName:", displayName);
+  try {
+    yield put(startLoader());
+    const { user } = yield createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    yield put(signUpSuccess({ user, otherData: { displayName } }));
+  } catch (err) {
+    yield put(stopLoader());
+    yield put(signUpFailure(err));
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("user.sagas.js, signUp, Error signing up:", err.message);
+    }
+
+    alert(
+      "An error occurred while trying to sign up. Check internet connection and try again."
+    );
+  }
+}
 
 function* signOutUserSaga() {
   try {
@@ -34,13 +87,14 @@ function* signOutUserSaga() {
         err.message
       );
     }
+
     alert("An error occurred while trying to sign out.");
   }
 }
 
-function* setCurrentUserSaga(user) {
+function* setCurrentUserSaga(user, otherData) {
   try {
-    const userDocRef = yield call(createUserProfileDocument, user);
+    const userDocRef = yield call(createUserProfileDocument, user, otherData);
     const userDocSnap = yield call(getDoc, userDocRef);
     yield put(signInSuccess({ id: userDocSnap.id, ...userDocSnap.data() }));
   } catch (err) {
@@ -52,6 +106,7 @@ function* setCurrentUserSaga(user) {
         err.message
       );
     }
+
     alert("An error occurred while trying to sign in.");
   }
 }
@@ -77,6 +132,7 @@ function* signInWithGoogleSaga() {
         err.message
       );
     }
+
     alert("Sign in with Google failed. Check your network and try again.");
   }
 }
@@ -107,6 +163,7 @@ function* signInWithEmailSaga({ payload: { email, password } }) {
         err.message
       );
     }
+
     alert(
       "Sign in failed. Check your network and verify your credentials before reattempting to sign in."
     );
@@ -143,11 +200,25 @@ function* onEmailSignInStartSaga() {
 }
 
 function* onCheckUserSessionSaga() {
-  yield takeLatest(UserActionTypes.CHECK_USER_SESSION, checkUserAuthenticationSaga);
+  yield takeLatest(
+    UserActionTypes.CHECK_USER_SESSION,
+    checkUserAuthenticationSaga
+  );
 }
 
 function* onSignOutStartSaga() {
   yield takeLatest(UserActionTypes.SIGN_OUT_START, signOutUserSaga);
+}
+
+function* onSignUpStartSaga() {
+  yield takeLatest(UserActionTypes.SIGN_UP_START, signUpSaga);
+}
+
+function* onSignUpSuccessSaga() {
+  yield takeLatest(
+    UserActionTypes.SIGN_UP_SUCCESS,
+    setCurrentUserAfterSignUpSaga
+  );
 }
 
 export function* userSagas() {
@@ -156,5 +227,7 @@ export function* userSagas() {
     call(onEmailSignInStartSaga),
     call(onCheckUserSessionSaga),
     call(onSignOutStartSaga),
+    call(onSignUpStartSaga),
+    call(onSignUpSuccessSaga),
   ]);
 }

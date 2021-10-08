@@ -76,6 +76,7 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
     if (!snapShotRef.exists()) {
       let { displayName, email } = userAuth;
       const createdAt = new Date();
+
       try {
         if (process.env.NODE_ENV === "development") {
           console.log(
@@ -87,6 +88,7 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
             otherData
           );
         }
+
         await setDoc(docRef, { displayName, email, createdAt, ...otherData });
       } catch (err) {
         if (process.env.NODE_ENV === "development") {
@@ -95,6 +97,7 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
             err.message
           );
         }
+
         alert("An unexpected error occurred during this operation!");
       }
     }
@@ -104,6 +107,7 @@ export const createUserProfileDocument = async (userAuth, otherData) => {
     if (process.env.NODE_ENV === "development") {
       console.log(err);
     }
+    
     alert("An unexpected error occurred during this operation");
   }
 };

@@ -1,12 +1,9 @@
 import React from "react";
+import { connect } from "react-redux";
 import "./sign-up.styles.scss";
 import CustomButton from "../custom-button/custom-button.component";
 import FormInput from "../form-input/form-input.component";
-import {
-  auth,
-  createUserWithEmailAndPassword,
-  createUserProfileDocument,
-} from "../../firebase/firebase.utils";
+import { signUpStart } from "../../redux/user/user.actions";
 
 class SignUp extends React.Component {
   constructor() {
@@ -22,6 +19,8 @@ class SignUp extends React.Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { displayName, email, password, confirmPassword } = this.state;
+    const { signUpStart } = this.props;
+
     if (process.env.NODE_ENV === "development") {
       console.log(
         "line 27, sign-up.component.jsx, handleSubmit(), displayName:",
@@ -34,37 +33,14 @@ class SignUp extends React.Component {
       return;
     }
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+    signUpStart({ email, password, displayName });
 
-      if (process.env.NODE_ENV === "development") {
-        console.log(
-          "line 46, sign-up.component.jsx, handleSubmit(), User:",
-          userCredential.user
-        );
-      }
-
-      await createUserProfileDocument(userCredential.user, { displayName });
-
-      this.setState({
-        displayName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-    } catch (err) {
-      if (process.env.NODE_ENV === "development") {
-        console.log(
-          "line 62, sign-up.component.jsx, handleSubmit(), Error during user creation:",
-          err.message
-        );
-      }
-      alert('There was an unexpected error during user creation!');
-    }
+    this.setState({
+      displayName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
   };
 
   handleChange = (e) => {
@@ -119,4 +95,7 @@ class SignUp extends React.Component {
   }
 }
 
-export default SignUp;
+const mapDispatchToProps = (dispatch) => ({
+  signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials)),
+});
+export default connect(null, mapDispatchToProps)(SignUp);
