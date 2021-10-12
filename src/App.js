@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -17,41 +17,31 @@ import SignInAndSignUpContainer from "./pages/signin-and-signup-page/sign-in-and
 import { compose } from "redux";
 import withSpinner from "./components/with-spinner/with-spinner.component";
 
-class App extends React.Component {
-  // The constructor has been commented out since it's not being used to set state or props
-  // constructor(props) {
-  //   super(props);
-  // }
-
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ checkUserSession, currentUser }) => {
+  useEffect(() => {
     checkUserSession();
-  }
 
-  render() {
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/shop' component={ShopPage} />
-          <Route exact path='/contacts' component={ContactsPage} />
-          <Route exact path='/checkout' component={CheckoutPage} />
-          <Route
-            path='/signin'
-            render={() =>
-              this.props.currentUser ? (
-                <Redirect to='/' />
-              ) : (
-                <SignInAndSignUpContainer />
-              )
-            }
-          />
-        </Switch>
-      </div>
-    );
-  }
-}
+    // eslint-disable-next-line
+  }, []);
+
+  return (
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path='/' component={HomePage} />
+        <Route path='/shop' component={ShopPage} />
+        <Route exact path='/contacts' component={ContactsPage} />
+        <Route exact path='/checkout' component={CheckoutPage} />
+        <Route
+          path='/signin'
+          render={() =>
+            currentUser ? <Redirect to='/' /> : <SignInAndSignUpContainer />
+          }
+        />
+      </Switch>
+    </div>
+  );
+};
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
