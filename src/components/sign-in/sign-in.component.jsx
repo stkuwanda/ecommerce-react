@@ -42,7 +42,7 @@ const SignIn = (props) => {
         <FormInput
           type='email'
           name='email'
-          value={userCredentials.email}
+          value={email}
           onChange={handleChange}
           required
           label='Email'
@@ -50,7 +50,7 @@ const SignIn = (props) => {
         <FormInput
           type='password'
           name='password'
-          value={userCredentials.password}
+          value={password}
           onChange={handleChange}
           required
           label='Password'
