@@ -20,9 +20,7 @@ import withSpinner from "./components/with-spinner/with-spinner.component";
 const App = ({ checkUserSession, currentUser }) => {
   useEffect(() => {
     checkUserSession();
-
-    // eslint-disable-next-line
-  }, []);
+  }, [checkUserSession]);
 
   return (
     <div>
