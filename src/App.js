@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router";
+import { compose } from "redux";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import HomePage from "./pages/homepage/homepage.component";
@@ -14,7 +15,6 @@ import {
   selectLoadingStatus,
 } from "./redux/user/user.selectors";
 import SignInAndSignUpContainer from "./pages/signin-and-signup-page/sign-in-and-sign-page.container";
-import { compose } from "redux";
 import withSpinner from "./components/with-spinner/with-spinner.component";
 
 const App = ({ checkUserSession, currentUser }) => {
