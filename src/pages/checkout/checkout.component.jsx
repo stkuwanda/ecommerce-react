@@ -1,6 +1,5 @@
 import React from "react";
-import { createStructuredSelector } from "reselect";
-import { connect, useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import CheckoutItem from "../../components/checkout-item/checkout-item.component";
 import StripeCheckoutButton from "../../components/stripe-button/stripe-button.component";
 import {
