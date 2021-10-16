@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { compose } from "redux";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import HomePage from "./pages/homepage/homepage.component";
 import "./App.css";
@@ -17,10 +17,13 @@ import {
 import SignInAndSignUpContainer from "./pages/signin-and-signup-page/sign-in-and-sign-page.container";
 import withSpinner from "./components/with-spinner/with-spinner.component";
 
-const App = ({ checkUserSession, currentUser }) => {
+const App = () => {
+  const currentUser = useSelector(selectCurrentUser);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    checkUserSession();
-  }, [checkUserSession]);
+    dispatch(checkUserSession());
+  }, [dispatch]);
 
   return (
     <div>
@@ -42,15 +45,7 @@ const App = ({ checkUserSession, currentUser }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
   isLoading: selectLoadingStatus,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  checkUserSession: () => dispatch(checkUserSession()),
-});
-
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  withSpinner
-)(App);
+export default compose(connect(mapStateToProps), withSpinner)(App);
