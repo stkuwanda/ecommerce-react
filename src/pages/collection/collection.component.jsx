@@ -1,12 +1,15 @@
 import React from "react";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectCollection } from "../../redux/shop/shop.selectors";
 import CollectionItem from "../../components/collection-item/collection-item.component";
 import "./collection.styles.scss";
 import CustomButton from "../../components/custom-button/custom-button.component";
 import { fetchCollectionsStart } from "../../redux/shop/shop.actions";
 
-const CollectionPage = ({ collection, fetchCollections }) => {
+const CollectionPage = ({ match: { params } }) => {
+  const collection = useSelector(selectCollection(params.collectionId));
+  const dispatch = useDispatch();
+
   if (process.env.NODE_ENV === "development") {
     console.log(
       "line 10, collection.component.jsx, CollectionPage, collection prop:",
@@ -24,7 +27,9 @@ const CollectionPage = ({ collection, fetchCollections }) => {
         alignItems: "center",
       }}
     >
-      <CustomButton onClick={() => fetchCollections()}>Retry</CustomButton>
+      <CustomButton onClick={() => dispatch(fetchCollectionsStart())}>
+        Retry
+      </CustomButton>
     </div>
   ) : (
     <div className='collection-page'>
@@ -38,12 +43,4 @@ const CollectionPage = ({ collection, fetchCollections }) => {
   );
 };
 
-const mapStateToProps = (state, { match: { params } }) => ({
-  collection: selectCollection(params.collectionId)(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  fetchCollections: () => dispatch(fetchCollectionsStart()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionPage);
+export default CollectionPage;
